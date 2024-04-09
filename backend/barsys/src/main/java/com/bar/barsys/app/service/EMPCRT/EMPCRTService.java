@@ -1,6 +1,7 @@
 package com.bar.barsys.app.service.EMPCRT;
 
 import com.bar.barsys.app.builder.EmployeesBuilder;
+import com.bar.barsys.app.service.COMMON.COMMONService;
 import com.bar.barsys.domain.common.CommonRequest;
 import com.bar.barsys.domain.common.ResultType;
 import com.bar.barsys.domain.entity.Employees;
@@ -18,11 +19,13 @@ import java.util.Random;
 @Service("EMPCRTService")
 public class EMPCRTService {
     private EmployeesService employeesService;
+    private COMMONService commonService;
 
     private final EmployeesBuilder employeesBuilder = Mappers.getMapper(EmployeesBuilder.class);
 
-    public EMPCRTService(EmployeesService employeesService) {
+    public EMPCRTService(EmployeesService employeesService, COMMONService commonService) {
         this.employeesService = employeesService;
+        this.commonService = commonService;
     }
 
     public Object execute(CommonRequest request) {
@@ -30,9 +33,9 @@ public class EMPCRTService {
         Employees empDto = employeesBuilder.requestToEntity(request);
         empDto.setId(createEmpId());
         empDto.setCreateBy(request.getLogin());
-        String salt = salt();
+        String salt = commonService.salt();
         empDto.setPasswordSalt(salt);
-        empDto.setPassword(hashPassword(request.getPassword(), salt));
+        empDto.setPassword(commonService.hashPassword(request.getPassword(), salt));
         employeesService.createOrUpdate(empDto);
 
         response.setReturnCode("200");
@@ -57,27 +60,6 @@ public class EMPCRTService {
         return empId;
     }
 
-    // 加鹽
-    private String salt() {
-        SecureRandom random = new SecureRandom();
-        byte[] salt = new byte[16];
-        random.nextBytes(salt);
-        return Base64.getEncoder().encodeToString(salt);
-    }
 
-    // SHA-1 加密
-    private String hashPassword(String password, String salt) {
-        try {
-            MessageDigest digest = MessageDigest.getInstance("SHA-1");
-            // 進行雜湊
-            String passwordWithSalt = password + salt;
-            byte[] hash = digest.digest(passwordWithSalt.getBytes());
-            // 轉Base64
-            return Base64.getEncoder().encodeToString(hash);
-        } catch (NoSuchAlgorithmException e) {
-            e.printStackTrace();
-            return null;
-        }
-    }
 
 }
