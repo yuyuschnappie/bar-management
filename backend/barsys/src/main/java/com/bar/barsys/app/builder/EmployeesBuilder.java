@@ -18,7 +18,7 @@ public interface EmployeesBuilder {
     @Mapping(source = "entryDate", target = "entryDate")
     @Mapping(source = "leaveDate", target = "leaveDate")
     @Mapping(source = "status", target = "status")
-    public List<EMPLIINQVO> entityListToGETALLEMPVO(List<Employees> entityList);
+    public List<EMPLIINQVO> entityListToEMPLIINQVO(List<Employees> entityList);
 
     @Mapping(source = "name", target = "name")
     @Mapping(source = "password", target = "password")

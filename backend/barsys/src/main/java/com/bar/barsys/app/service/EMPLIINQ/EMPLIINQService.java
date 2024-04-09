@@ -20,7 +20,7 @@ public class EMPLIINQService {
 
     public Object execute(CommonRequest request) {
         EMPLIINQResponse response = new EMPLIINQResponse();
-        response.setDataList(employeesBuilder.entityListToGETALLEMPVO(employeesService.findAll()));
+        response.setDataList(employeesBuilder.entityListToEMPLIINQVO(employeesService.findAll()));
 
         response.setReturnCode("200");
         response.setReturnMsg("完成");
