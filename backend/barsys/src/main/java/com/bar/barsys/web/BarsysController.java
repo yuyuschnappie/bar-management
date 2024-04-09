@@ -1,5 +1,7 @@
 package com.bar.barsys.web;
 
+import com.bar.barsys.app.service.CUSTCRT.CUSTCRTService;
+import com.bar.barsys.app.service.CUSTINQ.CUSTINQService;
 import com.bar.barsys.app.service.EMPCRT.EMPCRTService;
 import com.bar.barsys.app.service.EMPLIINQ.EMPLIINQService;
 import com.bar.barsys.domain.common.CommonRequest;
@@ -18,6 +20,8 @@ public class EmployeesController {
 
     private EMPLIINQService empliinqService;
     private EMPCRTService empcrtService;
+    private CUSTCRTService custcrtService;
+    private CUSTINQService custinqService;
 
 
     @CrossOrigin(origins = "http://localhost:5173")
@@ -33,6 +37,17 @@ public class EmployeesController {
         }
         return ResultType.FAILURE;
     }
+
+    @CrossOrigin(origins = "http://localhost:5173")
+    @PostMapping(value = "/customer/{tranCode}", consumes = MediaType.APPLICATION_JSON_VALUE)
+    public Object handleCustomerRequest(@RequestBody CommonRequest commonRequest, @PathVariable String tranCode) {
+        return switch(tranCode) {
+            case "custcrt" -> custcrtService.execute(commonRequest);
+            case "custinq" -> custinqService.execute(commonRequest);
+            default -> ResultType.FAILURE;
+        };
+    }
+
 
 
 }
