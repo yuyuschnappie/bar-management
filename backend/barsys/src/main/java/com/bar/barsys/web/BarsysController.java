@@ -10,12 +10,15 @@ import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-public class EmployeesController {
+public class BarsysController {
 
 
-    public EmployeesController(EMPLIINQService empliinqService, EMPCRTService empcrtService) {
+    public BarsysController(EMPLIINQService empliinqService, EMPCRTService empcrtService, CUSTCRTService custcrtService, CUSTINQService custinqService) {
         this.empliinqService = empliinqService;
         this.empcrtService = empcrtService;
+        this.custcrtService = custcrtService;
+        this.custinqService = custinqService;
+
     }
 
     private EMPLIINQService empliinqService;
@@ -27,27 +30,22 @@ public class EmployeesController {
     @CrossOrigin(origins = "http://localhost:5173")
     @PostMapping(value = "/hr/{tranCode}", consumes = MediaType.APPLICATION_JSON_VALUE)
     public Object handleHrRequest(@RequestBody CommonRequest commonRequest, @PathVariable String tranCode) {
-
-        if (tranCode.equals("empliinq")) {
-            return empliinqService.execute(commonRequest);
-        }
-
-        if (tranCode.equals("empcrt")) {
-            return empcrtService.execute(commonRequest);
-        }
-        return ResultType.FAILURE;
+        return switch (tranCode) {
+            case "empliinq" -> empliinqService.execute(commonRequest);
+            case "empcrt" -> empcrtService.execute(commonRequest);
+            default -> ResultType.FAILURE;
+        };
     }
 
     @CrossOrigin(origins = "http://localhost:5173")
     @PostMapping(value = "/customer/{tranCode}", consumes = MediaType.APPLICATION_JSON_VALUE)
     public Object handleCustomerRequest(@RequestBody CommonRequest commonRequest, @PathVariable String tranCode) {
-        return switch(tranCode) {
+        return switch (tranCode) {
             case "custcrt" -> custcrtService.execute(commonRequest);
             case "custinq" -> custinqService.execute(commonRequest);
             default -> ResultType.FAILURE;
         };
     }
-
 
 
 }
