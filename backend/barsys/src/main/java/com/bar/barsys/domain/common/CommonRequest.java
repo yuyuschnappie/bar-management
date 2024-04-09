@@ -1,6 +1,8 @@
 package com.bar.barsys.domain.common;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import jakarta.persistence.Column;
+import jakarta.persistence.Id;
 import lombok.Data;
 
 import java.util.Date;
@@ -28,4 +30,11 @@ public class CommonRequest {
     private Date leaveDate;
 
     private Integer status;
+
+    private String account;
+
+    private Boolean enable = false;
+
+    @JsonFormat(pattern = "yyyy/MM/dd", timezone = "Asia/Taipei")
+    private Date ableTime;
 }
